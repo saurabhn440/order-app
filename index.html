@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalog</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ... existing styles ... */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .quantity-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .quantity {
+            font-size: 16px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-content">
+        <h1>Product Catalog</h1>
+        <div id="product-container"></div>
+        <div id="cart-icon">🛒 <span id="cart-count">0</span></div>
+    </div>
+
+    <div id="cart-content" style="display: none;">
+        <h1>Your Cart</h1>
+        <button id="go-back-button">Go Back</button>
+        <div id="cart-items"></div>
+        <div class="total-price">
+            <h2>Total: ₹<span id="total-price">0.00</span></h2>
+        </div>
+    </div>
+
+    <div id="message-box" class="message-box">
+        <p>Your order has been placed!</p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Add this function to create product cards with quantity controls
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <h2>${product.name}</h2>
+                <p>₹${product.price.toFixed(2)}</p>
+                <div class="quantity-control">
+                    <button class="quantity-btn minus">-</button>
+                    <span class="quantity">1</span>
+                    <button class="quantity-btn plus">+</button>
+                </div>
+                <button class="add-to-cart">Add to Cart</button>
+            `;
+
+            const quantityControl = card.querySelector('.quantity-control');
+            const quantityDisplay = card.querySelector('.quantity');
+            const minusBtn = card.querySelector('.minus');
+            const plusBtn = card.querySelector('.plus');
+            const addToCartBtn = card.querySelector('.add-to-cart');
+
+            let quantity = 1;
+
+            minusBtn.addEventListener('click', () => {
+                if (quantity > 1) {
+                    quantity--;
+                    quantityDisplay.textContent = quantity;
+                }
+            });
+
+            plusBtn.addEventListener('click', () => {
+                quantity++;
+                quantityDisplay.textContent = quantity;
+            });
+
+            addToCartBtn.addEventListener('click', () => {
+                // Add to cart functionality here
+                console.log(`Added ${quantity} ${product.name}(s) to cart`);
+                // Reset quantity after adding to cart
+                quantity = 1;
+                quantityDisplay.textContent = quantity;
+            });
+
+            return card;
+        }
+
+        // Update your existing code to use the new createProductCard function
+        // when populating the product container
+    </script>
+</body>
+</html>
